@@ -65,7 +65,7 @@ textarea:focus,button:focus-visible,input:focus-visible{outline:3px solid var(--
   <p class="sub"><b>Session:</b> Self-Directed, AI-Assisted, Integrity-Intact: A Smart Andragogy Framework for Faculty<br><b>Resource person:</b> Dr K. Kannan Prasad, Assistant Professor of English, Loyola College (Autonomous), Chennai - 600034<br>About 10 minutes. There are no right answers, and I use the replies as raw material for the session.</p>
 
   <section id="p-fac">
-    <div class="note" style="margin-bottom:16px">No name is asked for or stored. At the end you get a short code. Send that code to the FDP organisers (TLCE, VIT) by email, and they will pass the codes on to the resource person. Anything you write inside your answers can be read by the organisers and the resource person, so leave out names of students or colleagues.</div>
+    <div class="note" id="noteTxt" style="margin-bottom:16px">No name is asked for or stored. At the end you get a short code. Send that code to the FDP organisers (TLCE, VIT) by email, and they will pass the codes on to the resource person. Anything you write inside your answers can be read by the organisers and the resource person, so leave out names of students or colleagues.</div>
 
     <form id="f" novalidate>
       <div class="card"><label class="q" for="q1">1. Which task in your own course would you most want to redesign for the AI era?</label>
@@ -96,9 +96,12 @@ textarea:focus,button:focus-visible,input:focus-visible{outline:3px solid var(--
       <div class="card"><label class="q" for="q6">6. What is one question you want this session to answer?</label>
         <textarea id="q6" maxlength="400"></textarea></div>
 
-      <div class="row"><button class="btn" type="submit">Create my code</button>
+      <input type="text" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
+      <div class="row"><button class="btn" id="subBtn" type="submit">Create my code</button>
         <span id="ferr" class="err" role="alert"></span></div>
     </form>
+
+    <div id="sent" class="card" hidden role="status"><h2>Thank you.</h2><p>Your answers have been sent. You do not need to do anything else. See you at the session.</p></div>
 
     <div id="done" class="card" hidden style="margin-top:16px">
       <h2>Thank you. Last step.</h2>
@@ -116,6 +119,7 @@ textarea:focus,button:focus-visible,input:focus-visible{outline:3px solid var(--
 
 <script>
 (function(){
+  var ENDPOINT = "https://script.google.com/macros/s/AKfycbwdwigj76uWc_DhmOmYgEPabt8lu0IpE-UFeklSAR6shl5I88gtdkf4xQ5GQFEf-ws/exec"; // Google Apps Script web app URL (set after deployment)
   var SEND_TO = ""; // e.g. "WhatsApp 98xxxxxx12 or kk@example.com"
   var $ = function(id){return document.getElementById(id)};
   if(SEND_TO){$("sendTo").textContent="Send it to: "+SEND_TO;$("sendTo").hidden=false;}
@@ -169,10 +173,22 @@ textarea:focus,button:focus-visible,input:focus-visible{outline:3px solid var(--
     var any=FIELDS.some(function(f){return o[f]});
     if(!any){$("ferr").textContent="Please answer at least one question.";return}
     $("ferr").textContent="";
+    if(!ENDPOINT){showCode(o);return}
+    $("subBtn").disabled=true; $("ferr").textContent="";
+    var body=o; body.website=$("hp").value;
+    fetch(ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},body:JSON.stringify(body)})
+      .then(function(){lsSet("fdp-draft","");$("f").hidden=true;$("sent").hidden=false;window.scrollTo(0,0)})
+      .catch(function(){$("subBtn").disabled=false;$("ferr").textContent="Could not send. Your answers are not lost: use the code below instead.";showCode(o)});
+  });
+  function showCode(o){
     $("codeOut").value=enc(o);
     $("done").hidden=false; $("f").hidden=true;
     $("codeOut").focus(); $("codeOut").select();
-  });
+  }
+  if(ENDPOINT){
+    $("noteTxt").textContent="No name is asked for or stored. Your answers are sent anonymously to the resource person when you press Submit. Anything you write inside your answers can be read by him, so leave out names of students or colleagues.";
+    $("subBtn").textContent="Submit my answers";
+  }
   $("editBtn").onclick=function(){$("done").hidden=true;$("f").hidden=false;$("copyMsg").textContent=""};
   $("copyBtn").onclick=function(){
     var t=$("codeOut"); t.focus(); t.select();
