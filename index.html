@@ -1,0 +1,188 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>FDP Pre-Session Reflection</title>
+<style>
+:root{
+  --bg:#F6F8F7; --surface:#FFFFFF; --ink:#1B2A41; --muted:#5B6B7F; --line:#D9E2E0;
+  --accent:#1F6F6B; --accent-ink:#FFFFFF; --warm:#B5502B; --soft:#EEF3F2; --focus:#C9A227;
+  --radius:10px;
+}
+@media (prefers-color-scheme: dark){
+  :root{ --bg:#0F1722; --surface:#172233; --ink:#E8EEF3; --muted:#9FB0C0; --line:#2A3A4F;
+    --accent:#7FB5B0; --accent-ink:#0F1722; --warm:#E3B7A4; --soft:#1D2B40; --focus:#E3C65A; }
+}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:16px/1.55 Calibri,"Segoe UI",system-ui,sans-serif}
+main{max-width:760px;margin:0 auto;padding:24px 16px 64px}
+h1{font:700 26px/1.25 Cambria,Georgia,serif;margin:0 0 6px}
+h2{font:700 20px/1.3 Cambria,Georgia,serif;margin:0 0 8px}
+p{margin:0 0 12px}
+.sub{color:var(--muted)}
+.org{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);margin-bottom:6px}
+.prog{font:italic 16px/1.4 Cambria,Georgia,serif;color:var(--muted);margin-bottom:14px;padding-bottom:12px;border-bottom:1px solid var(--line)}
+.tabs{display:flex;gap:8px;margin:18px 0}
+.tab{flex:1;padding:10px 12px;border:1px solid var(--line);background:var(--surface);color:var(--ink);
+  border-radius:var(--radius);font:inherit;font-weight:600;cursor:pointer}
+.tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:16px}
+.q{display:block;font-weight:700;margin-bottom:4px}
+.hint{color:var(--muted);font-size:14px;margin-bottom:8px}
+textarea{width:100%;min-height:84px;padding:10px;border:1px solid var(--line);border-radius:8px;
+  background:var(--bg);color:var(--ink);font:inherit;resize:vertical}
+textarea.code{min-height:110px;font:13px/1.4 Consolas,monospace;word-break:break-all}
+textarea:focus,button:focus-visible,input:focus-visible{outline:3px solid var(--focus);outline-offset:1px}
+.scale{display:flex;gap:8px;flex-wrap:wrap}
+.scale label{flex:1;min-width:56px;text-align:center;border:1px solid var(--line);border-radius:8px;
+  padding:10px 4px;cursor:pointer;background:var(--bg)}
+.scale input{position:absolute;opacity:0}
+.scale label:has(input:checked){background:var(--accent);color:var(--accent-ink);border-color:var(--accent);font-weight:700}
+.scale label:has(input:focus-visible){outline:3px solid var(--focus)}
+.scale small{display:block;color:inherit;opacity:.8;font-size:12px}
+.ends{display:flex;justify-content:space-between;color:var(--muted);font-size:13px;margin-top:4px}
+.btn{padding:11px 18px;border-radius:var(--radius);border:1px solid var(--accent);background:var(--accent);
+  color:var(--accent-ink);font:inherit;font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.note{background:var(--soft);border-left:4px solid var(--accent);padding:10px 12px;border-radius:6px;font-size:14px}
+.err{color:var(--warm);font-weight:600}
+.bars{display:grid;gap:10px;margin:12px 0}
+.bar{display:grid;grid-template-columns:72px 1fr 32px;gap:10px;align-items:center}
+.track{background:var(--soft);border-radius:6px;height:26px;overflow:hidden}
+.fill{background:var(--accent);height:100%;min-width:2px}
+.snip{border-left:3px solid var(--warm);padding:6px 10px;margin:8px 0;background:var(--bg);border-radius:0 6px 6px 0;white-space:pre-wrap}
+.stat{font:700 34px/1 Cambria,Georgia,serif;color:var(--accent)}
+[hidden]{display:none!important}
+</style>
+</head>
+<body>
+<main>
+  <div class="org">Teaching Learning Centre of Excellence (TLCE), in association with the School of Social Sciences and Languages (SSL), Vellore Institute of Technology (VIT)</div>
+  <div class="prog">Five-Day Faculty Development Programme (FDP): “Smart Andragogy for Lifelong Learners: Harnessing AI for Content Creation, Teaching and Learning”</div>
+  <h1>Before the session: six questions</h1>
+  <p class="sub"><b>Session:</b> Self-Directed, AI-Assisted, Integrity-Intact: A Smart Andragogy Framework for Faculty<br><b>Resource person:</b> Dr K. Kannan Prasad, Assistant Professor of English, Loyola College (Autonomous), Chennai - 600034<br>About 10 minutes. There are no right answers, and I use the replies as raw material for the session.</p>
+
+  <section id="p-fac">
+    <div class="note" style="margin-bottom:16px">No name is asked for or stored. At the end you get a short code. Send that code to the FDP organisers (TLCE, VIT) by email, and they will pass the codes on to the resource person. Anything you write inside your answers can be read by the organisers and the resource person, so leave out names of students or colleagues.</div>
+
+    <form id="f" novalidate>
+      <div class="card"><label class="q" for="q1">1. Which task in your own course would you most want to redesign for the AI era?</label>
+        <div class="hint">Name the task and the learning outcome it is meant to build.</div>
+        <textarea id="q1" maxlength="600"></textarea></div>
+
+      <div class="card"><span class="q" id="q2l">2. How confident are you that you can tell AI-written student work from a student's own?</span>
+        <div class="scale" role="radiogroup" aria-labelledby="q2l">
+          <label><input type="radio" name="q2" value="1">1<small>Not at all</small></label>
+          <label><input type="radio" name="q2" value="2">2</label>
+          <label><input type="radio" name="q2" value="3">3</label>
+          <label><input type="radio" name="q2" value="4">4</label>
+          <label><input type="radio" name="q2" value="5">5<small>Very</small></label>
+        </div></div>
+
+      <div class="card"><label class="q" for="q3">3. When you learn something new on your own, how do you check that you have actually understood it?</label>
+        <textarea id="q3" maxlength="600"></textarea></div>
+
+      <div class="card"><span class="q">4. One task you would happily hand to AI, and one you never would. Why each?</span>
+        <label class="hint" for="q4a">Happily hand over</label>
+        <textarea id="q4a" maxlength="400" style="min-height:64px"></textarea>
+        <label class="hint" for="q4b" style="margin-top:10px;display:block">Would never hand over</label>
+        <textarea id="q4b" maxlength="400" style="min-height:64px"></textarea></div>
+
+      <div class="card"><label class="q" for="q5">5. Think of a time you caught an AI error. What tipped you off?</label>
+        <textarea id="q5" maxlength="600"></textarea></div>
+
+      <div class="card"><label class="q" for="q6">6. What is one question you want this session to answer?</label>
+        <textarea id="q6" maxlength="400"></textarea></div>
+
+      <div class="row"><button class="btn" type="submit">Create my code</button>
+        <span id="ferr" class="err" role="alert"></span></div>
+    </form>
+
+    <div id="done" class="card" hidden style="margin-top:16px">
+      <h2>Thank you. Last step.</h2>
+      <p id="sendTo" hidden></p>
+      <p>Send the code below to the FDP organisers (TLCE, VIT). Tap inside the box, select all, copy, and paste it into your message.</p>
+      <textarea id="codeOut" class="code" readonly aria-label="Your answer code"></textarea>
+      <div class="row" style="margin-top:10px">
+        <button class="btn" id="copyBtn" type="button">Copy code</button>
+        <button class="btn ghost" id="editBtn" type="button">Edit my answers</button>
+        <span id="copyMsg" class="sub" role="status"></span>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+(function(){
+  var SEND_TO = ""; // e.g. "WhatsApp 98xxxxxx12 or kk@example.com"
+  var $ = function(id){return document.getElementById(id)};
+  if(SEND_TO){$("sendTo").textContent="Send it to: "+SEND_TO;$("sendTo").hidden=false;}
+  var FIELDS = ["q1","q2","q3","q4a","q4b","q5","q6"];
+  var QTEXT = {
+    q1:"Q1. Task to redesign, and its learning outcome",
+    q3:"Q3. How faculty check their own understanding",
+    q4a:"Q4a. A task they would happily hand to AI",
+    q4b:"Q4b. A task they would never hand to AI",
+    q5:"Q5. What tipped them off to an AI error",
+    q6:"Q6. A question for the session"
+  };
+  function lsGet(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  function lsSet(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+
+  // encode/decode
+  function enc(obj){
+    var s = btoa(unescape(encodeURIComponent(JSON.stringify(obj))));
+    return "FDP1:" + s.replace(/\+/g,"-").replace(/\//g,"_").replace(/=+$/,"");
+  }
+  function dec_unused(code){
+    var s = code.slice(5).replace(/-/g,"+").replace(/_/g,"/");
+    while(s.length%4) s+="=";
+    return JSON.parse(decodeURIComponent(escape(atob(s))));
+  }
+
+  // draft autosave
+  function collect(){
+    var o={};
+    FIELDS.forEach(function(f){
+      if(f==="q2"){var r=document.querySelector('input[name="q2"]:checked'); o.q2=r?r.value:"";}
+      else o[f]=$(f).value.trim();
+    });
+    return o;
+  }
+  function restore(){
+    var raw=lsGet("fdp-draft"); if(!raw) return;
+    try{var o=JSON.parse(raw);
+      FIELDS.forEach(function(f){
+        if(f==="q2"){ if(o.q2){var r=document.querySelector('input[name="q2"][value="'+o.q2+'"]'); if(r) r.checked=true;} }
+        else if(o[f]) $(f).value=o[f];
+      });}catch(e){}
+  }
+  $("f").addEventListener("input",function(){lsSet("fdp-draft",JSON.stringify(collect()))});
+  $("f").addEventListener("change",function(){lsSet("fdp-draft",JSON.stringify(collect()))});
+  restore();
+
+  $("f").addEventListener("submit",function(e){
+    e.preventDefault();
+    var o=collect();
+    var any=FIELDS.some(function(f){return o[f]});
+    if(!any){$("ferr").textContent="Please answer at least one question.";return}
+    $("ferr").textContent="";
+    $("codeOut").value=enc(o);
+    $("done").hidden=false; $("f").hidden=true;
+    $("codeOut").focus(); $("codeOut").select();
+  });
+  $("editBtn").onclick=function(){$("done").hidden=true;$("f").hidden=false;$("copyMsg").textContent=""};
+  $("copyBtn").onclick=function(){
+    var t=$("codeOut"); t.focus(); t.select();
+    var done=function(ok){$("copyMsg").textContent = ok ? "Copied." : "Code selected. Press Ctrl+C, or long-press and choose Copy.";};
+    if(navigator.clipboard&&navigator.clipboard.writeText){
+      navigator.clipboard.writeText(t.value).then(function(){done(true)},function(){var ok=false;try{ok=document.execCommand("copy")}catch(e){}done(ok)});
+    }else{var ok=false;try{ok=document.execCommand("copy")}catch(e){}done(ok)}
+  };
+
+})();
+</script>
+</body>
+</html>
