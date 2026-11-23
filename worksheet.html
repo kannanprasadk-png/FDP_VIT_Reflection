@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Offloading Audit Worksheet</title>
+<style>
+:root{--bg:#F6F8F7;--surface:#FFFFFF;--ink:#1B2A41;--muted:#5B6B7F;--line:#C9D6D3;--accent:#1F6F6B;--accent-ink:#FFFFFF;--warm:#B5502B;--soft:#EEF3F2;--warmsoft:#F7EBE5;--focus:#C9A227;--gold:#8A6D00}
+@media (prefers-color-scheme: dark){:root{--bg:#0F1722;--surface:#172233;--ink:#E8EEF3;--muted:#9FB0C0;--line:#33465E;--accent:#7FB5B0;--accent-ink:#0F1722;--warm:#E3B7A4;--soft:#1D2B40;--warmsoft:#2A2430;--focus:#E3C65A;--gold:#E3C65A}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:17px/1.5 Calibri,"Segoe UI",system-ui,sans-serif}
+main{max-width:980px;margin:0 auto;padding:20px 16px 110px}
+h1{font:700 28px/1.25 Cambria,Georgia,serif;margin:0 0 6px}
+h2{font:700 22px/1.3 Cambria,Georgia,serif;margin:0 0 6px;color:var(--accent)}
+h3{font:700 18px/1.3 Cambria,Georgia,serif;margin:16px 0 6px}
+p{margin:0 0 10px}
+.org{font-size:13px;font-weight:700;letter-spacing:.04em;text-transform:uppercase;color:var(--accent);margin-bottom:4px}
+.sub{color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+.nav{position:sticky;top:0;z-index:5;background:var(--bg);padding:8px 0;display:flex;gap:6px;flex-wrap:wrap;border-bottom:1px solid var(--line);margin-bottom:14px}
+.nav a{padding:6px 12px;border:1px solid var(--line);border-radius:999px;color:var(--ink);text-decoration:none;font-weight:600;font-size:15px;background:var(--surface)}
+.nav a:hover,.nav a:focus-visible{border-color:var(--accent);outline:3px solid var(--focus)}
+.q{display:block;font-weight:700;margin:12px 0 4px}
+textarea,input[type=text],select{width:100%;padding:9px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit}
+textarea{min-height:44px;resize:vertical;overflow:hidden}
+textarea:focus,input:focus,select:focus,button:focus-visible,summary:focus-visible{outline:3px solid var(--focus);outline-offset:1px}
+table{width:100%;border-collapse:collapse;margin:8px 0}
+th,td{border:1px solid var(--line);padding:6px 8px;vertical-align:top;text-align:left}
+th{background:var(--soft);font-size:15px}
+td.n{width:36px;text-align:center;font-weight:700}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin:8px 0}
+.tab{padding:8px 14px;border:1px solid var(--line);background:var(--surface);color:var(--ink);border-radius:10px;font:inherit;font-weight:600;cursor:pointer}
+.tab[aria-pressed=true]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.btn{padding:10px 16px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);font:inherit;font-weight:700;cursor:pointer}
+.btn.ghost{background:transparent;color:var(--accent)}
+.btn.warn{background:transparent;color:var(--warm);border-color:var(--warm)}
+.note{background:var(--soft);border-left:5px solid var(--accent);padding:10px 12px;border-radius:6px;font-size:15px;margin:10px 0}
+.warnbox{background:var(--warmsoft);border-left:5px solid var(--warm);padding:10px 12px;border-radius:6px;font-size:15px;margin:10px 0}
+.pill{display:inline-block;padding:2px 10px;border-radius:999px;font-weight:700;font-size:14px;border:1px solid var(--line)}
+.p-Offload{background:var(--soft);color:var(--accent)}.p-Protect{background:var(--accent);color:var(--accent-ink)}.p-Redesign{background:var(--warmsoft);color:var(--warm);border-color:var(--warm)}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:5px 2px;cursor:pointer}
+.opt input{margin-top:5px;width:18px;height:18px;flex:none}
+.yn{display:flex;gap:16px;white-space:nowrap}
+.yn label{cursor:pointer;display:flex;gap:6px;align-items:center}
+.row{display:flex;gap:10px;flex-wrap:wrap;align-items:center}
+.count{font-weight:700}
+#timer{position:fixed;right:14px;bottom:14px;background:var(--surface);border:2px solid var(--accent);border-radius:14px;padding:8px 12px;display:flex;gap:8px;align-items:center;box-shadow:0 2px 10px rgba(0,0,0,.15);z-index:9}
+#tm{font:700 26px Cambria,Georgia,serif;min-width:64px;text-align:center}
+#tm.low{color:var(--warm)}
+.tbtn{padding:6px 10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:inherit;font-weight:600;cursor:pointer}
+[hidden]{display:none!important}
+@media print{
+  body{background:#fff;color:#000;font-size:12pt}.nav,#timer,.noprint,.tabs,.btn{display:none!important}
+  main{padding:0;max-width:none}.card{border:0;padding:0 0 8px;break-inside:avoid}
+  textarea,input[type=text],select{border:1px solid #999;background:#fff;color:#000}
+  .opt input,.yn input{width:14px;height:14px}
+}
+</style></head>
+<body><main>
+<div class="org">Teaching Learning Centre of Excellence (TLCE) · School of Social Sciences and Languages (SSL) · Vellore Institute of Technology (VIT)</div>
+<h1>Offloading Audit and Lane Decision</h1>
+<p class="sub">Faculty worksheet · Self-Directed, AI-Assisted, Integrity-Intact: A Smart Andragogy Framework for Faculty · Dr K. Kannan Prasad, Assistant Professor of English, Loyola College (Autonomous), Chennai</p>
+
+<nav class="nav" aria-label="Steps"><a href="#s1">1 Task</a><a href="#s2">2 Audit</a><a href="#s3">3 Lane</a><a href="#s4">4 Commit</a><a href="#s5">Debrief</a><a href="#out">Save</a></nav>
+
+<div class="card">
+  <p><b>You have 15 minutes.</b> Pick one real task from your own course, audit it, choose its lane, and commit to one change. Work in pairs: one person works through their task while the partner asks the audit question aloud. Swap if time allows.</p>
+  <table><tr><th>Time</th><th>Step</th></tr>
+  <tr><td>3 min</td><td>Step 1: choose a task and name its learning outcome</td></tr>
+  <tr><td>6 min</td><td>Step 2: break the task into steps and run the audit</td></tr>
+  <tr><td>3 min</td><td>Step 3: choose the lane</td></tr>
+  <tr><td>3 min</td><td>Step 4: redesign and commit</td></tr></table>
+  <p style="font-size:19px"><b>The audit question:</b> If AI does this step, what will the learner no longer have practised?</p>
+  <div class="warnbox noprint"><b>Shared computer?</b> Your work is kept only in this browser tab and disappears when you close it. Nothing is sent anywhere. Before you leave, print it, save it as a Word file, or copy it. Use "Clear my worksheet" at the bottom when you finish.</div>
+</div>
+
+<section class="card" id="s1" aria-labelledby="h1s"><h2 id="h1s">Step 1: Choose one real task</h2>
+  <p>Pick a task you actually set in a course you teach: an essay, a case analysis, a lab report, a reading response, a quiz. Then write its learning outcome in one sentence, starting with a verb the student performs.</p>
+  <label class="q" for="course">Course and level</label><textarea id="course" data-k="course" rows="1"></textarea>
+  <label class="q" for="task">The task</label><textarea id="task" data-k="task" rows="1"></textarea>
+  <label class="q" for="outcome">Learning outcome: by the end, the student can...</label><textarea id="outcome" data-k="outcome" rows="1"></textarea>
+  <label class="q" for="thinking">Where the thinking in this task really happens</label><textarea id="thinking" data-k="thinking" rows="1"></textarea>
+</section>
+
+<section class="card" id="s2" aria-labelledby="h2s"><h2 id="h2s">Step 2: Run the offloading audit</h2>
+  <p>List the steps a student takes to complete your task. For each step, ask the audit question, then decide:</p>
+  <p><span class="pill p-Offload">Offload</span> The step is only a route to the outcome, and the learner loses no practice the outcome depends on.<br>
+  <span class="pill p-Protect">Protect</span> The step is where the outcome lives. Keep it unaided, or allow AI only after the learner has made their own attempt.<br>
+  <span class="pill p-Redesign">Redesign</span> The step matters, but AI makes it easy to skip. Add process evidence, an oral check or a guardrailed prompt.</p>
+  <div class="note"><b>The same step can get different decisions in different courses.</b> It depends on the outcome you wrote in Step 1, so keep that in view.</div>
+
+  <details class="noprint"><summary style="cursor:pointer;font-weight:700">See a worked example (choose the one closest to your field)</summary>
+    <div class="tabs" role="group" aria-label="Choose a worked example">
+      <button class="tab" type="button" data-ex="hum" aria-pressed="true">Humanities</button>
+      <button class="tab" type="button" data-ex="sci" aria-pressed="false">Science and engineering</button>
+      <button class="tab" type="button" data-ex="mgmt" aria-pressed="false">Commerce and management</button>
+    </div>
+    <div id="exbox"></div>
+  </details>
+
+  <h3>Your task</h3>
+  <table id="audit"><thead><tr><th>#</th><th>Step in the task</th><th>If AI does this, what will the learner no longer have practised?</th><th>Decision</th></tr></thead><tbody></tbody></table>
+  <div class="row noprint"><button class="btn ghost" type="button" id="addRow">Add a step</button><button class="btn ghost" type="button" id="delRow">Remove last step</button>
+    <span class="count" id="tally"></span></div>
+  <div class="note" id="auditHint" hidden></div>
+</section>
+
+<section class="card" id="s3" aria-labelledby="h3s"><h2 id="h3s">Step 3: Choose the lane</h2>
+  <p>A task is either <b>secure</b>, meaning it verifies what a student can do unaided, or <b>open</b>, meaning it teaches and AI is permitted. This follows the two-lane approach used at the University of Sydney. A secure task does not always ban AI, but it is supervised so you can trust the result.</p>
+  <table><thead><tr><th>Question about your task</th><th>Answer</th></tr></thead><tbody>
+    <tr><td>Does this task certify that the student can do something unaided? <span class="sub">(if yes: Secure)</span></td><td class="yn"><label><input type="radio" name="lq1" value="yes"> Yes</label><label><input type="radio" name="lq1" value="no"> No</label></td></tr>
+    <tr><td>Would a weak result here carry a high cost, such as a final grade or a professional standard? <span class="sub">(if yes: Secure)</span></td><td class="yn"><label><input type="radio" name="lq2" value="yes"> Yes</label><label><input type="radio" name="lq2" value="no"> No</label></td></tr>
+    <tr><td>Is this mainly where students practise and get feedback? <span class="sub">(if yes: Open)</span></td><td class="yn"><label><input type="radio" name="lq3" value="yes"> Yes</label><label><input type="radio" name="lq3" value="no"> No</label></td></tr>
+    <tr><td>Is working with AI a skill graduates in this field are expected to have? <span class="sub">(if yes: Open, and ask students to explain how they used AI)</span></td><td class="yn"><label><input type="radio" name="lq4" value="yes"> Yes</label><label><input type="radio" name="lq4" value="no"> No</label></td></tr>
+  </tbody></table>
+  <div class="note" id="laneHint">Answer the four questions to see a suggested lane.</div>
+  <details class="noprint"><summary style="cursor:pointer;font-weight:700">Examples of each lane</summary>
+    <table><thead><tr><th>Secure (supervised)</th><th>Open (AI permitted)</th></tr></thead><tbody>
+    <tr><td>In-person exam</td><td>Case study with an AI-use statement</td></tr>
+    <tr><td>Oral defence</td><td>Debate preparation</td></tr>
+    <tr><td>Presentation with live questioning</td><td>Drafting and revision with feedback</td></tr>
+    <tr><td>Hands-on demonstration</td><td>In-class or take-home quiz for practice</td></tr></tbody></table></details>
+  <p style="margin-top:10px">Every step you marked <b>Protect</b> needs a secure checkpoint somewhere in the course. It need not be this task.</p>
+  <div class="note" id="protHint" hidden></div>
+  <label class="q" for="lane">Lane for this task</label>
+  <select id="lane" data-k="lane"><option value="">Choose a lane</option><option>Secure</option><option>Open</option><option>Split: a secure checkpoint plus an open stage</option></select>
+  <label class="q" for="why">Why</label><textarea id="why" data-k="why" rows="1"></textarea>
+  <label class="q" for="checkpoint">Secure checkpoint for the Protect steps</label><textarea id="checkpoint" data-k="checkpoint" rows="1"></textarea>
+</section>
+
+<section class="card" id="s4" aria-labelledby="h4s"><h2 id="h4s">Step 4: Redesign and commit</h2>
+  <p>Choose one Protect or Redesign step and change how the task handles it. Tick the moves you might use:</p>
+  <label class="opt"><input type="checkbox" data-m="evidence"> Ask for process evidence: notes, outlines and draft history submitted with the final work.</label>
+  <label class="opt"><input type="checkbox" data-m="oral"> Add a short oral check or viva on the submitted work.</label>
+  <label class="opt"><input type="checkbox" data-m="inclass"> Move the key step into class as a short enactment or supervised writing.</label>
+  <label class="opt"><input type="checkbox" data-m="retrieval"> Require a retrieval attempt, written without AI, before students consult AI.</label>
+  <label class="opt"><input type="checkbox" data-m="guardrail"> Give students a guardrailed prompt that offers hints and questions instead of answers.</label>
+  <label class="opt"><input type="checkbox" data-m="why"> Ask students to explain in a sentence or two why the unaided step matters for them.</label>
+  <div class="note" id="stepsHint" hidden></div>
+  <label class="q" for="commit">The one change I will make this term</label><textarea id="commit" data-k="commit" rows="1"></textarea>
+  <label class="q" for="protects">The step it protects</label><textarea id="protects" data-k="protects" rows="1"></textarea>
+  <label class="q" for="measure">How I will tell whether it worked</label><textarea id="measure" data-k="measure" rows="1"></textarea>
+</section>
+
+<section class="card" id="s5" aria-labelledby="h5s"><h2 id="h5s">Pair debrief (2 minutes each)</h2>
+  <label class="q" for="d1">1. Which step did you first want to offload, and did the audit agree?</label><textarea id="d1" data-k="d1" rows="1"></textarea>
+  <label class="q" for="d2">2. Which step surprised you as the one where the outcome lives?</label><textarea id="d2" data-k="d2" rows="1"></textarea>
+  <label class="q" for="d3">3. What would your students need to hear about why the unaided work matters?</label><textarea id="d3" data-k="d3" rows="1"></textarea>
+</section>
+
+<section class="card noprint" id="out" aria-labelledby="hout"><h2 id="hout">Keep your worksheet</h2>
+  <p>Nothing has been sent to anyone. Choose how you want to keep it.</p>
+  <div class="row"><button class="btn" type="button" id="bPrint">Print or save as PDF</button>
+    <button class="btn" type="button" id="bDoc">Download for Word</button>
+    <button class="btn ghost" type="button" id="bCopy">Copy as text</button>
+    <button class="btn warn" type="button" id="bClear">Clear my worksheet</button><span class="sub" id="outMsg" role="status"></span></div>
+</section>
+</main>
+
+<div id="timer" class="noprint" role="group" aria-label="Step timer"><span id="tm" aria-live="off">00:00</span>
+  <button class="tbtn" type="button" data-min="3">3 min</button><button class="tbtn" type="button" data-min="6">6 min</button><button class="tbtn" type="button" id="tStop">Stop</button></div>
+
+<script>
+(function(){
+  var $=function(i){return document.getElementById(i)}, qa=function(s){return Array.prototype.slice.call(document.querySelectorAll(s))};
+  var KEY="fdp-ws", S={rows:[{},{},{},{}],moves:{},lq:{},ex:"hum"};
+  function load(){try{var r=sessionStorage.getItem(KEY);if(r)S=JSON.parse(r)}catch(e){}}
+  function save(){try{sessionStorage.setItem(KEY,JSON.stringify(S))}catch(e){}}
+  var EX={
+   hum:{t:"A 1,500-word essay interpreting a contemporary novel",o:"Outcome: the student can build and defend an interpretation of a text from textual evidence.",r:[
+     ["Gather background on the author and context","Judging the quality of sources","Offload","with a source check"],
+     ["Form an interpretive claim","Interpretation, which is the outcome","Protect",""],
+     ["Build the argument from textual evidence","Selecting and reading evidence closely","Redesign","notes and draft history submitted, short viva"],
+     ["Fix grammar and formatting","Proofreading, which is a route here","Offload",""]]},
+   sci:{t:"A practical report on a laboratory experiment",o:"Outcome: the student can interpret experimental data and judge whether it supports a hypothesis.",r:[
+     ["Look up the background theory and the method","Judging whether a source is reliable","Offload","with a source check"],
+     ["Run the experiment and record observations","Careful observation and handling of equipment","Protect","done in the lab, supervised"],
+     ["Analyse the data and decide whether it supports the hypothesis","Interpreting results, which is the outcome","Protect",""],
+     ["Plot graphs and format tables","Presenting data, a route here unless presentation is the outcome","Offload",""],
+     ["Write the discussion of errors and limitations","Reasoning about uncertainty","Redesign","lab notebook plus a two-minute oral question"]]},
+   mgmt:{t:"A written case analysis with a recommendation memo",o:"Outcome: the student can recommend a course of action and defend it with evidence.",r:[
+     ["Summarise the facts of the case","Extracting the facts, a route here","Offload","with a spot check against the case"],
+     ["Define the core problem","Framing the problem, which is the outcome","Protect",""],
+     ["Compare the options against criteria, using numbers","Weighing evidence and trade-offs","Redesign","show the working, short in-class defence"],
+     ["Polish the language and format of the memo","Editing, a route here","Offload",""]]}
+  };
+  function esc(s){var d=document.createElement("div");d.textContent=s==null?"":s;return d.innerHTML}
+  function renderEx(){
+    var e=EX[S.ex]||EX.hum;
+    $("exbox").innerHTML='<p style="margin-top:8px"><b>'+esc(e.t)+'</b><br><span class="sub">'+esc(e.o)+' (illustrative)</span></p><table><thead><tr><th>Step in the task</th><th>If AI does this, what will the learner no longer have practised?</th><th>Decision</th></tr></thead><tbody>'+
+      e.r.map(function(r){return '<tr><td>'+esc(r[0])+'</td><td>'+esc(r[1])+'</td><td><span class="pill p-'+r[2]+'">'+r[2]+'</span>'+(r[3]?' '+esc(r[3]):'')+'</td></tr>'}).join("")+'</tbody></table>';
+    qa(".tab").forEach(function(b){b.setAttribute("aria-pressed",String(b.getAttribute("data-ex")===S.ex))});
+  }
+  function grow(t){t.style.height="auto";t.style.height=Math.max(t.scrollHeight+2,40)+"px"}
+  function renderRows(){
+    var tb=document.querySelector("#audit tbody");
+    tb.innerHTML=S.rows.map(function(r,i){return '<tr><td class="n">'+(i+1)+'</td>'+
+      '<td><textarea data-r="'+i+'" data-f="s" aria-label="Step '+(i+1)+'" rows="1">'+esc(r.s)+'</textarea></td>'+
+      '<td><textarea data-r="'+i+'" data-f="p" aria-label="What the learner no longer practises, step '+(i+1)+'" rows="1">'+esc(r.p)+'</textarea></td>'+
+      '<td><select data-r="'+i+'" data-f="d" aria-label="Decision for step '+(i+1)+'"><option value="">Choose</option>'+["Offload","Protect","Redesign"].map(function(o){return '<option'+(r.d===o?' selected':'')+'>'+o+'</option>'}).join("")+'</select></td></tr>'}).join("");
+    qa("#audit textarea").forEach(grow);
+  }
+  function stepsWith(d){return S.rows.filter(function(r){return r.d===d&&(r.s||"").trim()}).map(function(r){return r.s.trim()})}
+  function hints(){
+    var c={Offload:0,Protect:0,Redesign:0};S.rows.forEach(function(r){if(r.d)c[r.d]++});
+    var n=c.Offload+c.Protect+c.Redesign;
+    $("tally").textContent=n?("Offload "+c.Offload+" · Protect "+c.Protect+" · Redesign "+c.Redesign):"";
+    var h=$("auditHint"),m="";
+    if(n>=3&&c.Protect===0&&c.Redesign===0)m="Every step is marked Offload. Re-read your outcome in Step 1: which step is the student really there to practise?";
+    else if(n>=3&&c.Offload===0)m="No step is marked Offload. Is there a step that is only a route, such as gathering sources or fixing formatting?";
+    h.hidden=!m;h.textContent=m;
+    var p=stepsWith("Protect"),rd=stepsWith("Redesign"),ph=$("protHint");
+    ph.hidden=!p.length;ph.innerHTML=p.length?"You marked "+p.length+" step"+(p.length>1?"s":"")+" as Protect: "+p.map(esc).join("; ")+". Name the secure checkpoint below.":"";
+    var sh=$("stepsHint"),both=p.concat(rd);
+    sh.hidden=!both.length;sh.innerHTML=both.length?"Steps you marked Protect or Redesign: "+both.map(esc).join("; "):"";
+  }
+  function laneHint(){
+    var L=S.lq,sec=L.lq1==="yes"||L.lq2==="yes",op=L.lq3==="yes"||L.lq4==="yes",m="";
+    if(!(L.lq1&&L.lq2&&L.lq3&&L.lq4)&&!(sec||op))m="Answer the four questions to see a suggested lane.";
+    else if(sec&&op)m="Suggested: split the task. Use a secure checkpoint for what must be verified, and an open stage where students practise with AI and explain how they used it.";
+    else if(sec)m="Suggested lane: Secure. Supervise the task so the result can be trusted.";
+    else if(op)m="Suggested lane: Open."+(L.lq4==="yes"?" Ask students to explain how they used AI.":"");
+    else m="Neither lane is indicated yet. Re-read the questions against your task.";
+    $("laneHint").textContent=m;
+  }
+  function fillStatic(){
+    qa("[data-k]").forEach(function(e){e.value=S[e.getAttribute("data-k")]||""});
+    qa("[data-m]").forEach(function(e){e.checked=!!S.moves[e.getAttribute("data-m")]});
+    qa('input[type=radio][name^="lq"]').forEach(function(e){e.checked=S.lq[e.name]===e.value});
+    qa("textarea[data-k]").forEach(grow);
+  }
+  document.addEventListener("input",function(e){
+    var t=e.target;
+    if(t.hasAttribute("data-k")){S[t.getAttribute("data-k")]=t.value;if(t.tagName==="TEXTAREA")grow(t)}
+    else if(t.hasAttribute("data-r")){S.rows[+t.getAttribute("data-r")][t.getAttribute("data-f")]=t.value;if(t.tagName==="TEXTAREA")grow(t);hints()}
+    save();
+  });
+  document.addEventListener("change",function(e){
+    var t=e.target;
+    if(t.hasAttribute("data-m")){S.moves[t.getAttribute("data-m")]=t.checked}
+    else if(t.type==="radio"&&/^lq/.test(t.name)){S.lq[t.name]=t.value;laneHint()}
+    else if(t.hasAttribute("data-r")){S.rows[+t.getAttribute("data-r")][t.getAttribute("data-f")]=t.value;hints()}
+    save();
+  });
+  qa(".tab").forEach(function(b){b.onclick=function(){S.ex=b.getAttribute("data-ex");renderEx();save()}});
+  $("addRow").onclick=function(){if(S.rows.length<10){S.rows.push({});renderRows();hints();save()}};
+  $("delRow").onclick=function(){if(S.rows.length>1){S.rows.pop();renderRows();hints();save()}};
+
+  var MV={evidence:"Ask for process evidence (notes, outlines, draft history)",oral:"Add a short oral check or viva",inclass:"Move the key step into class (enactment or supervised writing)",retrieval:"Require a retrieval attempt without AI before consulting AI",guardrail:"Give students a guardrailed prompt (hints and questions, not answers)",why:"Ask students to explain why the unaided step matters"};
+  function data(){
+    var mv=Object.keys(MV).filter(function(k){return S.moves[k]}).map(function(k){return MV[k]});
+    return {S:S,mv:mv,rows:S.rows.filter(function(r){return (r.s||"").trim()||(r.p||"").trim()||r.d})};
+  }
+  function asText(){
+    var d=data(),t="OFFLOADING AUDIT AND LANE DECISION\nSelf-Directed, AI-Assisted, Integrity-Intact. FDP: TLCE and SSL, VIT. Resource person: Dr K. Kannan Prasad\n\n";
+    t+="STEP 1: THE TASK\nCourse and level: "+(S.course||"")+"\nTask: "+(S.task||"")+"\nLearning outcome: "+(S.outcome||"")+"\nWhere the thinking happens: "+(S.thinking||"")+"\n\n";
+    t+="STEP 2: AUDIT (If AI does this step, what will the learner no longer have practised?)\n";
+    d.rows.forEach(function(r,i){t+=(i+1)+". "+(r.s||"")+"\n   Learner no longer practises: "+(r.p||"")+"\n   Decision: "+(r.d||"")+"\n"});
+    t+="\nSTEP 3: LANE\nQuestion answers: "+["lq1","lq2","lq3","lq4"].map(function(k,i){return (i+1)+"="+(S.lq[k]||"-")}).join(", ")+"\nLane: "+(S.lane||"")+"\nWhy: "+(S.why||"")+"\nSecure checkpoint for Protect steps: "+(S.checkpoint||"")+"\n\n";
+    t+="STEP 4: COMMIT\nMoves I might use:\n"+(d.mv.length?d.mv.map(function(m){return "- "+m}).join("\n"):"-")+"\nThe one change I will make this term: "+(S.commit||"")+"\nThe step it protects: "+(S.protects||"")+"\nHow I will tell whether it worked: "+(S.measure||"")+"\n\n";
+    t+="PAIR DEBRIEF\n1. First wanted to offload, and did the audit agree? "+(S.d1||"")+"\n2. Surprised me as where the outcome lives: "+(S.d2||"")+"\n3. What students need to hear about why unaided work matters: "+(S.d3||"")+"\n";
+    return t;
+  }
+  function asHtml(){
+    var d=data(),f=function(l,v){return '<tr><th style="text-align:left;width:32%;background:#EEF3F2">'+esc(l)+'</th><td>'+esc(v).replace(/\n/g,"<br>")+'</td></tr>'};
+    var h='<html><head><meta charset="utf-8"><title>Offloading Audit and Lane Decision</title><style>body{font-family:Calibri,Arial;font-size:12pt}table{border-collapse:collapse;width:100%;margin-bottom:12px}th,td{border:1px solid #999;padding:5px 8px;vertical-align:top}h1{font-family:Cambria;font-size:20pt}h2{font-family:Cambria;font-size:14pt;color:#1F6F6B}</style></head><body>';
+    h+='<h1>Offloading Audit and Lane Decision</h1><p>Self-Directed, AI-Assisted, Integrity-Intact. FDP organised by TLCE and SSL, VIT. Resource person: Dr K. Kannan Prasad, Loyola College (Autonomous), Chennai.</p>';
+    h+='<h2>Step 1: The task</h2><table>'+f("Course and level",S.course)+f("The task",S.task)+f("Learning outcome",S.outcome)+f("Where the thinking happens",S.thinking)+'</table>';
+    h+='<h2>Step 2: Audit</h2><p><i>If AI does this step, what will the learner no longer have practised?</i></p><table><tr><th>#</th><th>Step in the task</th><th>Learner no longer practises</th><th>Decision</th></tr>'+d.rows.map(function(r,i){return '<tr><td>'+(i+1)+'</td><td>'+esc(r.s)+'</td><td>'+esc(r.p)+'</td><td>'+esc(r.d)+'</td></tr>'}).join("")+'</table>';
+    h+='<h2>Step 3: Lane</h2><table>'+f("Lane",S.lane)+f("Why",S.why)+f("Secure checkpoint for Protect steps",S.checkpoint)+'</table>';
+    h+='<h2>Step 4: Commit</h2><table>'+f("Moves I might use",d.mv.join("\n"))+f("The one change I will make this term",S.commit)+f("The step it protects",S.protects)+f("How I will tell whether it worked",S.measure)+'</table>';
+    h+='<h2>Pair debrief</h2><table>'+f("First wanted to offload, and did the audit agree?",S.d1)+f("Surprised me as where the outcome lives",S.d2)+f("What students need to hear about why unaided work matters",S.d3)+'</table></body></html>';
+    return h;
+  }
+  $("bPrint").onclick=function(){try{window.print()}catch(e){$("outMsg").textContent="Use your browser's Print command (Ctrl+P)."}};
+  $("bDoc").onclick=function(){
+    try{var b=new Blob(["﻿"+asHtml()],{type:"application/msword"});var a=document.createElement("a");a.href=URL.createObjectURL(b);a.download="Offloading_Audit_Worksheet.doc";document.body.appendChild(a);a.click();a.remove();$("outMsg").textContent="Downloaded. Open it in Word."}
+    catch(e){$("outMsg").textContent="Could not download. Use Copy as text instead."}
+  };
+  $("bCopy").onclick=function(){
+    var t=asText(),ok=function(v){$("outMsg").textContent=v?"Copied. Paste it into an email or document.":"Could not copy. Use Print or Download instead."};
+    if(navigator.clipboard&&navigator.clipboard.writeText)navigator.clipboard.writeText(t).then(function(){ok(true)},function(){ok(false)});else ok(false);
+  };
+  $("bClear").onclick=function(){
+    if(!window.confirm||confirm("Clear everything on this worksheet? This cannot be undone.")){
+      try{sessionStorage.removeItem(KEY)}catch(e){}
+      S={rows:[{},{},{},{}],moves:{},lq:{},ex:"hum"};fillStatic();renderRows();renderEx();hints();laneHint();$("outMsg").textContent="Cleared.";
+    }
+  };
+
+  // timer
+  var tt=null,left=0;
+  function tick(){var m=Math.floor(left/60),s=left%60;$("tm").textContent=(m<10?"0":"")+m+":"+(s<10?"0":"")+s;$("tm").className=left<=30&&left>0?"low":""}
+  qa("[data-min]").forEach(function(b){b.onclick=function(){if(tt)clearInterval(tt);left=+b.getAttribute("data-min")*60;tick();tt=setInterval(function(){left--;tick();if(left<=0){clearInterval(tt);tt=null;$("tm").textContent="Time"}},1000)}});
+  $("tStop").onclick=function(){if(tt)clearInterval(tt);tt=null;left=0;tick()};
+
+  load();fillStatic();renderRows();renderEx();hints();laneHint();
+})();
+</script></body></html>
