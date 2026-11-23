@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Vote</title>
+<style>
+:root{--bg:#F6F8F7;--surface:#FFFFFF;--ink:#1B2A41;--muted:#5B6B7F;--line:#D9E2E0;--accent:#1F6F6B;--accent-ink:#FFFFFF;--warm:#B5502B;--soft:#EEF3F2;--focus:#C9A227}
+@media (prefers-color-scheme: dark){:root{--bg:#0F1722;--surface:#172233;--ink:#E8EEF3;--muted:#9FB0C0;--line:#2A3A4F;--accent:#7FB5B0;--accent-ink:#0F1722;--warm:#E3B7A4;--soft:#1D2B40;--focus:#E3C65A}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.5 Calibri,"Segoe UI",system-ui,sans-serif}
+main{max-width:640px;margin:0 auto;padding:24px 16px 56px}
+h1{font:700 26px/1.25 Cambria,Georgia,serif;margin:0 0 8px}
+.sub{color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+button:focus-visible,input:focus-visible,label:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:2px}
+.big{display:flex;gap:12px}
+.big label{flex:1;text-align:center;border:2px solid var(--line);border-radius:14px;padding:26px 8px;font:700 34px/1 Cambria,Georgia,serif;cursor:pointer;background:var(--bg)}
+.big input,.five input{position:absolute;opacity:0}
+.big label:has(input:checked){background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.five{display:flex;gap:8px}
+.five label{flex:1;text-align:center;border:1px solid var(--line);border-radius:10px;padding:14px 4px;cursor:pointer;background:var(--bg);font-weight:700}
+.five label:has(input:checked){background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.ends{display:flex;justify-content:space-between;color:var(--muted);font-size:14px;margin-top:4px}
+.btn{width:100%;padding:16px;border-radius:12px;border:0;background:var(--accent);color:var(--accent-ink);font:700 20px Calibri,sans-serif;cursor:pointer}
+.btn:disabled{opacity:.5}
+.err{color:var(--warm);font-weight:700;min-height:1.5em}
+[hidden]{display:none!important}
+</style>
+</head><body><main>
+<h1>Which answer was written by a student?</h1>
+<p class="sub">Look at the two answers on the screen, then vote. It is anonymous and takes ten seconds.</p>
+<form id="f" novalidate>
+  <div class="card"><div class="sub" id="l1" style="margin-bottom:8px">Your choice</div>
+    <div class="big" role="radiogroup" aria-labelledby="l1">
+      <label><input type="radio" name="c" value="A">A</label>
+      <label><input type="radio" name="c" value="B">B</label>
+    </div></div>
+  <div class="card"><div class="sub" id="l2" style="margin-bottom:8px">How sure are you?</div>
+    <div class="five" role="radiogroup" aria-labelledby="l2">
+      <label><input type="radio" name="s" value="1">1</label><label><input type="radio" name="s" value="2">2</label>
+      <label><input type="radio" name="s" value="3">3</label><label><input type="radio" name="s" value="4">4</label>
+      <label><input type="radio" name="s" value="5">5</label></div>
+    <div class="ends"><span>Guessing</span><span>Certain</span></div></div>
+  <input type="text" id="hp" tabindex="-1" autocomplete="off" aria-hidden="true" style="position:absolute;left:-9999px;width:1px;height:1px">
+  <button class="btn" id="go" type="submit">Send my vote</button>
+  <div class="err" id="err" role="alert"></div>
+</form>
+<div class="card" id="done" hidden role="status"><h1>Vote received.</h1>
+  <p>Now turn to your neighbour and tell them which cues you used.</p></div>
+</main>
+<script>
+(function(){
+  var ENDPOINT="https://script.google.com/macros/s/AKfycbwdwigj76uWc_DhmOmYgEPabt8lu0IpE-UFeklSAR6shl5I88gtdkf4xQ5GQFEf-ws/exec";
+  var $=function(i){return document.getElementById(i)};
+  function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  function set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+  var testMode=location.hash==="#test";
+  if(get("fdp-voted")&&!testMode){$("f").hidden=true;$("done").hidden=false;$("done").querySelector("h1").textContent="You have already voted.";}
+  $("f").addEventListener("submit",function(e){
+    e.preventDefault();
+    var c=document.querySelector('input[name="c"]:checked'),s=document.querySelector('input[name="s"]:checked');
+    if(!c){$("err").textContent="Please choose A or B.";return}
+    if(!s){$("err").textContent="Please choose how sure you are, 1 to 5.";return}
+    $("err").textContent="";$("go").disabled=true;
+    fetch(ENDPOINT,{method:"POST",mode:"no-cors",headers:{"Content-Type":"text/plain;charset=utf-8"},
+      body:JSON.stringify({type:"vote",choice:c.value,sure:s.value,website:$("hp").value})})
+      .then(function(){if(!testMode)set("fdp-voted","1");$("f").hidden=true;$("done").hidden=false})
+      .catch(function(){$("go").disabled=false;$("err").textContent="Could not send. Please check your connection and try again."});
+  });
+})();
+</script></body></html>
