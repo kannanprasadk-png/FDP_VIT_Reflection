@@ -29,6 +29,8 @@ p{margin:0 0 12px}
 .tab[aria-selected="true"]{background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
 .card{background:var(--surface);border:1px solid var(--line);border-radius:var(--radius);padding:16px;margin-bottom:16px}
 .q{display:block;font-weight:700;margin-bottom:4px}
+.opt{display:flex;gap:10px;align-items:flex-start;padding:8px 4px;cursor:pointer}
+.opt input{margin-top:5px;width:18px;height:18px;flex:none}
 .hint{color:var(--muted);font-size:14px;margin-bottom:8px}
 textarea{width:100%;min-height:84px;padding:10px;border:1px solid var(--line);border-radius:8px;
   background:var(--bg);color:var(--ink);font:inherit;resize:vertical}
@@ -81,8 +83,16 @@ textarea:focus,button:focus-visible,input:focus-visible{outline:3px solid var(--
           <label><input type="radio" name="q2" value="5">5<small>Very</small></label>
         </div></div>
 
-      <div class="card"><label class="q" for="q3">3. When you learn something new on your own, how do you check that you have actually understood it?</label>
-        <textarea id="q3" maxlength="600"></textarea></div>
+      <fieldset class="card" style="border:1px solid var(--line);margin-inline:0"><legend class="q" style="padding:0 6px">3. Think of the last time you taught yourself something new for your work (a concept, a tool or a method). Which of these did you do to check you had really understood it?</legend>
+        <div class="hint">Tick all that apply.</div>
+        <label class="opt"><input type="checkbox" name="q3" value="explain"> Tried to explain it to someone else, or wrote it out from memory</label>
+        <label class="opt"><input type="checkbox" name="q3" value="apply"> Used it on a real problem and saw whether it worked</label>
+        <label class="opt"><input type="checkbox" name="q3" value="second"> Checked it against a second source</label>
+        <label class="opt"><input type="checkbox" name="q3" value="ai"> Asked an AI tool to confirm it or quiz me</label>
+        <label class="opt"><input type="checkbox" name="q3" value="colleague"> Discussed it with a colleague</label>
+        <label class="opt"><input type="checkbox" name="q3" value="feeling"> I mostly went by whether it felt clear</label>
+        <label class="opt"><input type="checkbox" name="q3" value="other" id="q3other"> Other:</label>
+        <textarea id="q3o" maxlength="200" style="min-height:48px" aria-label="Other way you checked your understanding"></textarea></fieldset>
 
       <div class="card"><span class="q">4. One task you would happily hand to AI, and one you never would. Why each?</span>
         <label class="hint" for="q4a">Happily hand over</label>
@@ -151,6 +161,12 @@ textarea:focus,button:focus-visible,input:focus-visible{outline:3px solid var(--
     var o={};
     FIELDS.forEach(function(f){
       if(f==="q2"){var r=document.querySelector('input[name="q2"]:checked'); o.q2=r?r.value:"";}
+      else if(f==="q3"){
+        var v=[];document.querySelectorAll('input[name="q3"]:checked').forEach(function(x){v.push(x.value)});
+        var ot=$("q3o").value.trim().replace(/\|/g," ");
+        var i=v.indexOf("other"); if(i>-1&&ot) v[i]="other:"+ot;
+        o.q3=v.join("|");
+      }
       else o[f]=$(f).value.trim();
     });
     return o;
@@ -160,11 +176,19 @@ textarea:focus,button:focus-visible,input:focus-visible{outline:3px solid var(--
     try{var o=JSON.parse(raw);
       FIELDS.forEach(function(f){
         if(f==="q2"){ if(o.q2){var r=document.querySelector('input[name="q2"][value="'+o.q2+'"]'); if(r) r.checked=true;} }
+        else if(f==="q3"){
+          String(o.q3||"").split("|").forEach(function(t){
+            if(!t) return;
+            if(t.indexOf("other")===0){$("q3other").checked=true;if(t.length>6)$("q3o").value=t.slice(6)}
+            else{var x=document.querySelector('input[name="q3"][value="'+t+'"]');if(x)x.checked=true}
+          });
+        }
         else if(o[f]) $(f).value=o[f];
       });}catch(e){}
   }
   $("f").addEventListener("input",function(){lsSet("fdp-draft",JSON.stringify(collect()))});
   $("f").addEventListener("change",function(){lsSet("fdp-draft",JSON.stringify(collect()))});
+  $("q3o").addEventListener("input",function(){if($("q3o").value.trim())$("q3other").checked=true});
   restore();
 
   $("f").addEventListener("submit",function(e){
