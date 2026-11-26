@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Live Vote Results</title>
+<style>
+:root{--bg:#F6F8F7;--surface:#FFFFFF;--ink:#1B2A41;--muted:#5B6B7F;--line:#D9E2E0;--accent:#1F6F6B;--accent-ink:#FFFFFF;--warm:#B5502B;--soft:#EEF3F2;--focus:#C9A227}
+@media (prefers-color-scheme: dark){:root{--bg:#0F1722;--surface:#172233;--ink:#E8EEF3;--muted:#9FB0C0;--line:#2A3A4F;--accent:#7FB5B0;--accent-ink:#0F1722;--warm:#E3B7A4;--soft:#1D2B40;--focus:#E3C65A}}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:18px/1.5 Calibri,"Segoe UI",system-ui,sans-serif}
+main{max-width:640px;margin:0 auto;padding:24px 16px 56px}
+h1{font:700 26px/1.25 Cambria,Georgia,serif;margin:0 0 8px}
+.sub{color:var(--muted)}
+.card{background:var(--surface);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+button:focus-visible,input:focus-visible,label:has(input:focus-visible){outline:3px solid var(--focus);outline-offset:2px}
+.big{display:flex;gap:12px}
+.big label{flex:1;text-align:center;border:2px solid var(--line);border-radius:14px;padding:26px 8px;font:700 34px/1 Cambria,Georgia,serif;cursor:pointer;background:var(--bg)}
+.big input,.five input{position:absolute;opacity:0}
+.big label:has(input:checked){background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.five{display:flex;gap:8px}
+.five label{flex:1;text-align:center;border:1px solid var(--line);border-radius:10px;padding:14px 4px;cursor:pointer;background:var(--bg);font-weight:700}
+.five label:has(input:checked){background:var(--accent);color:var(--accent-ink);border-color:var(--accent)}
+.ends{display:flex;justify-content:space-between;color:var(--muted);font-size:14px;margin-top:4px}
+.btn{width:100%;padding:16px;border-radius:12px;border:0;background:var(--accent);color:var(--accent-ink);font:700 20px Calibri,sans-serif;cursor:pointer}
+.btn:disabled{opacity:.5}
+.err{color:var(--warm);font-weight:700;min-height:1.5em}
+[hidden]{display:none!important}
+</style>
+<style>
+main{max-width:1000px}
+h1{font-size:34px}
+.tot{font:700 64px/1 Cambria,Georgia,serif;color:var(--accent)}
+.vrow{display:grid;grid-template-columns:90px 1fr 190px;gap:18px;align-items:center;margin:18px 0}
+.vlab{font:700 56px/1 Cambria,Georgia,serif}
+.vtrack{background:var(--soft);border-radius:12px;height:64px;overflow:hidden}
+.vfill{height:100%;background:var(--accent);min-width:3px;transition:width .5s}
+.vfill.b{background:var(--warm)}
+.vnum{font:700 34px/1.1 Cambria,Georgia,serif}
+.vsub{font-size:16px;color:var(--muted);font-weight:400;font-family:Calibri,sans-serif}
+.bar2{display:flex;gap:10px;flex-wrap:wrap;margin-top:12px}
+.btn2{padding:12px 18px;border-radius:10px;border:1px solid var(--accent);background:var(--accent);color:var(--accent-ink);font:700 18px Calibri,sans-serif;cursor:pointer}
+.btn2.ghost{background:transparent;color:var(--accent)}
+textarea{width:100%;min-height:44px;padding:10px;border:1px solid var(--line);border-radius:8px;background:var(--bg);color:var(--ink);font:16px Calibri,sans-serif}
+.key{padding:14px;border-left:6px solid var(--warm);background:var(--soft);border-radius:6px;font-size:22px;margin-top:16px}
+</style></head><body><main>
+<h1>Live vote: which answer was written by a student?</h1>
+<div class="card" id="setup">
+  <label class="sub" for="key">Private phrase (from the Apps Script)</label>
+  <textarea id="key" aria-label="Private phrase"></textarea>
+  <div class="bar2"><button class="btn2" id="start" type="button">Start listening</button><span class="sub" id="msg" role="status"></span></div>
+</div>
+<div class="card" id="board" hidden>
+  <div style="display:flex;align-items:baseline;gap:14px"><span class="tot" id="tot">0</span><span class="sub">votes in</span></div>
+  <div id="split" hidden>
+    <div class="vrow"><div class="vlab">A</div><div class="vtrack"><div class="vfill" id="fa"></div></div><div class="vnum" id="na"></div></div>
+    <div class="vrow"><div class="vlab">B</div><div class="vtrack"><div class="vfill b" id="fb"></div></div><div class="vnum" id="nb"></div></div>
+    <div class="sub" id="conf"></div>
+  </div>
+  <div class="bar2">
+    <button class="btn2" id="show" type="button">Show the split</button>
+    <button class="btn2 ghost" id="rev" type="button" hidden>Reveal the answer</button>
+    <button class="btn2 ghost" id="hide" type="button" hidden>Hide the split</button>
+  </div>
+  <div class="key" id="answer" hidden><b>Answer A</b> was written by AI. <b>Answer B</b> was written by a student.</div>
+</div>
+<script>
+(function(){
+  var ENDPOINT="https://script.google.com/macros/s/AKfycbwdwigj76uWc_DhmOmYgEPabt8lu0IpE-UFeklSAR6shl5I88gtdkf4xQ5GQFEf-ws/exec";
+  var $=function(i){return document.getElementById(i)};
+  function get(k){try{return localStorage.getItem(k)}catch(e){return null}}
+  function set(k,v){try{localStorage.setItem(k,v)}catch(e){}}
+  var timer=null,showSplit=false,last=[];
+  if(get("fdp-votekey")) $("key").value=get("fdp-votekey");
+  function draw(){
+    var a=0,b=0,sa=0,sb=0,na=0,nb=0;
+    last.forEach(function(v){var s=parseInt(v.s,10);
+      if(v.c==="A"){a++;if(s>0){sa+=s;na++}} else if(v.c==="B"){b++;if(s>0){sb+=s;nb++}}});
+    var t=a+b; $("tot").textContent=t;
+    if(!showSplit) return;
+    var pa=t?Math.round(a/t*100):0, pb=t?100-pa:0;
+    $("fa").style.width=pa+"%"; $("fb").style.width=pb+"%";
+    $("na").innerHTML=a+' <span class="vsub">('+pa+'%)</span>';
+    $("nb").innerHTML=b+' <span class="vsub">('+(t?pb:0)+'%)</span>';
+    $("conf").textContent="Average sureness (1 to 5):  A voters "+(na?(sa/na).toFixed(1):"-")+"   ·   B voters "+(nb?(sb/nb).toFixed(1):"-");
+  }
+  function load(){
+    var k=$("key").value.trim(); if(!k){$("msg").textContent="Enter the private phrase.";return}
+    set("fdp-votekey",k);
+    fetch(ENDPOINT+"?type=votes&key="+encodeURIComponent(k))
+      .then(function(r){return r.json()})
+      .then(function(j){
+        if(!j.ok){$("msg").textContent="Not authorised. Check the phrase.";if(timer){clearInterval(timer);timer=null}return}
+        last=j.votes||[]; $("setup").hidden=true; $("board").hidden=false; draw();
+      })
+      .catch(function(){$("msg").textContent="Could not reach the web app."});
+  }
+  $("start").onclick=function(){ if(timer)clearInterval(timer); load(); timer=setInterval(load,3000) };
+  $("show").onclick=function(){showSplit=true;$("split").hidden=false;$("show").hidden=true;$("rev").hidden=false;$("hide").hidden=false;draw()};
+  $("hide").onclick=function(){showSplit=false;$("split").hidden=true;$("show").hidden=false;$("rev").hidden=true;$("hide").hidden=true;$("answer").hidden=true};
+  $("rev").onclick=function(){$("answer").hidden=false;$("rev").hidden=true};
+})();
+</script></main></body></html>
